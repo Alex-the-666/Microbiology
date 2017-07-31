@@ -1,0 +1,16 @@
+[
+{
+  "modid": "microbiology",
+  "name": "Microbiology",
+  "description": "",
+  "version": "alpha",
+  "mcversion": "1.11.2",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Alexthe666"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

@@ -1,0 +1,9 @@
+tile.microbiology.infinitum_ore.name=Infinitum Ore
+tile.microbiology.nexus_off.name=Infinitum Nexus
+tile.microbiology.nexus_on.name=Infinitum Nexus
+tile.microbiology.microscope_off.name=Infinitum Microscope
+tile.microbiology.microscope_on.name=Infinitum Microscope
+tile.microbiology.teleporter_off.name=Infinitum Teleporter
+tile.microbiology.teleporter_on.name=Infinitum Teleporter
+
+item.microbiology.infinitum_ingot.name=Infinitum Ingot

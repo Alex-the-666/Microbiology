@@ -1,6 +1,10 @@
 package com.github.alexthe666.microbiology;
 
 import com.github.alexthe666.microbiology.server.ServerProxy;
+import com.github.alexthe666.microbiology.server.recipe.MicrobiologyRecipeRegistry;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -13,18 +17,25 @@ public class Microbiology
 {
     public static final String MODID = "microbiology";
     public static final String VERSION = "alpha";
-    public static final String LLIBRARY_VERSION = "1.7.6";
+    public static final String LLIBRARY_VERSION = "1.7.7";
     public static final String NAME = "Microbiology";
     @SidedProxy(clientSide = "com.github.alexthe666.microbiology.client.ClientProxy", serverSide = "com.github.alexthe666.microbiology.server.ServerProxy")
     public static ServerProxy PROXY;
-
+    public static CreativeTabs CREATIVE_TAB;
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        CREATIVE_TAB = new CreativeTabs("microbiology") {
+            @Override
+            public ItemStack getTabIconItem() {
+                return new ItemStack(Items.WOODEN_AXE);
+            }
+        };
         PROXY.preInit();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        MicrobiologyRecipeRegistry.init();
         PROXY.init();
     }
 

@@ -1,0 +1,7 @@
+{
+    "parent": "block/cube_column",
+    "textures": {
+        "end": "microbiology:blocks/nexus_top_off",
+        "side": "microbiology:blocks/nexus_side_off"
+    }
+}

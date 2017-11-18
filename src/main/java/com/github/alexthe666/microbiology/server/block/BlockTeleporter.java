@@ -2,6 +2,7 @@ package com.github.alexthe666.microbiology.server.block;
 
 import com.github.alexthe666.microbiology.Microbiology;
 import com.github.alexthe666.microbiology.server.block.entity.TileEntityTeleporter;
+import com.github.alexthe666.microbiology.server.dimension.MicrobiologyTeleporter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -10,7 +11,10 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -104,6 +108,27 @@ public class BlockTeleporter extends BlockContainer {
         }
     }
 
+    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if(worldIn.getTileEntity(pos) instanceof TileEntityTeleporter && this == MicrobiologyBlockRegistry.TELEPORTER_ON && entityIn instanceof EntityPlayer && !worldIn.isRemote){
+            TileEntityTeleporter tele = (TileEntityTeleporter)worldIn.getTileEntity(pos);
+            int dim = tele.getNexusDimension();
+            if(dim != 0){
+                if ((!entityIn.isBeingRidden()) && (entityIn.getPassengers().isEmpty()) && (entityIn instanceof EntityPlayerMP)) {
+                    EntityPlayerMP thePlayer = (EntityPlayerMP) entityIn;
+                    if (thePlayer.timeUntilPortal > 0) {
+                        thePlayer.timeUntilPortal = 10;
+                    } else if (thePlayer.dimension != dim && thePlayer.mcServer.getWorld(dim) != null) {
+                        thePlayer.timeUntilPortal = 10;
+                        thePlayer.mcServer.getPlayerList().transferPlayerToDimension(thePlayer, dim, new MicrobiologyTeleporter(thePlayer.mcServer.getWorld(dim)));
+                    } else {
+                        thePlayer.timeUntilPortal = 10;
+                        thePlayer.mcServer.getPlayerList().transferPlayerToDimension(thePlayer, 0, new MicrobiologyTeleporter(thePlayer.mcServer.getWorld(0)));
+                    }
+                }
+            }
+        }
+    }
+
     private void setDefaultFacing(World worldIn, BlockPos pos, IBlockState state) {
         if (!worldIn.isRemote) {
             EnumFacing enumfacing = (EnumFacing)state.getValue(FACING);
@@ -168,6 +193,21 @@ public class BlockTeleporter extends BlockContainer {
             }
         }
         return false;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand){
+        if(worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof TileEntityTeleporter){
+            TileEntityTeleporter tile = (TileEntityTeleporter)worldIn.getTileEntity(pos);
+            if(tile.topBlock != null && worldIn.getBlockState(tile.topBlock).getBlock() instanceof BlockTeleporter && this == MicrobiologyBlockRegistry.TELEPORTER_ON){
+                if(tile.isTop()){
+                    Microbiology.PROXY.createParticle(worldIn, "teleporter", pos.getX() + rand.nextFloat(), pos.getY() + 0.6, pos.getZ() + rand.nextFloat(), 0, 0.1D * (tile.topBlock.getY() - pos.getY()), 0);
+                }else{
+                    Microbiology.PROXY.createParticle(worldIn, "teleporter", pos.getX() + rand.nextFloat(), pos.getY() + 0.6, pos.getZ() + rand.nextFloat(), 0, -0.1D * (pos.getY() - tile.topBlock.getY()), 0);
+                }
+            }
+        }
+
     }
 
 }

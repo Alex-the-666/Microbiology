@@ -2,6 +2,7 @@ package com.github.alexthe666.microbiology.server.block;
 
 import com.github.alexthe666.microbiology.Microbiology;
 import com.github.alexthe666.microbiology.server.block.entity.TileEntityMicroscope;
+import com.github.alexthe666.microbiology.server.item.MicrobiologyItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.BlockHorizontal;
@@ -12,6 +13,8 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -94,10 +97,10 @@ public class BlockMicroscope extends BlockContainer {
     public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
         this.setDefaultFacing(worldIn, pos, state);
         if(this.isTouchingNexus(worldIn, pos) && this == MicrobiologyBlockRegistry.MICROSCOPE_OFF){
-            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(BlockMicroscope.FACING, worldIn.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+            setState(true, worldIn, pos);
         }
         if(!this.isTouchingNexus(worldIn, pos) && this == MicrobiologyBlockRegistry.MICROSCOPE_ON){
-            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(BlockMicroscope.FACING, worldIn.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+            setState(false, worldIn, pos);
         }
     }
 
@@ -106,7 +109,7 @@ public class BlockMicroscope extends BlockContainer {
         this.checkAndDropBlock(worldIn, pos, state);
         if (!worldIn.isRemote) {
             if (this == MicrobiologyBlockRegistry.MICROSCOPE_ON && !this.isTouchingNexus(worldIn, pos)) {
-                worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(BlockMicroscope.FACING, worldIn.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+                setState(false, worldIn, pos);
             }
         }
     }
@@ -115,10 +118,10 @@ public class BlockMicroscope extends BlockContainer {
         this.checkAndDropBlock(worldIn, pos, state);
         if (!worldIn.isRemote) {
             if (this == MicrobiologyBlockRegistry.MICROSCOPE_ON && !this.isTouchingNexus(worldIn, pos)) {
-                worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(BlockMicroscope.FACING, worldIn.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+                setState(false, worldIn, pos);
             }
             else if (this == MicrobiologyBlockRegistry.MICROSCOPE_OFF && this.isTouchingNexus(worldIn, pos)) {
-                worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(BlockMicroscope.FACING, worldIn.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+                setState(true, worldIn, pos);
             }
         }
     }
@@ -162,16 +165,50 @@ public class BlockMicroscope extends BlockContainer {
         return new ItemStack(MicrobiologyBlockRegistry.MICROSCOPE_OFF);
     }
 
-    public static void setState(boolean active, World worldIn, BlockPos pos) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        ItemStack stack = playerIn.getHeldItem(hand).copy();
+        if(tileentity instanceof TileEntityMicroscope){
+            TileEntityMicroscope microscope = (TileEntityMicroscope)tileentity;
+            if(stack != null && stack.getItem() != null && stack.getItem() == MicrobiologyItemRegistry.PETRI_DISH){
+                if(microscope.getStackInSlot(0) != null && microscope.getStackInSlot(0) != ItemStack.EMPTY){
+                    EntityItem item = new EntityItem(worldIn, pos.getX() + 0.5D, pos.getY() + 1.5D, pos.getZ() + 0.5D, microscope.getStackInSlot(0));
+                    microscope.setInventorySlotContents(0, ItemStack.EMPTY);
+                    if(!worldIn.isRemote) {
+                        worldIn.spawnEntity(item);
+                    }
+                }
+                microscope.setInventorySlotContents(0, stack);
+                playerIn.getHeldItem(hand).shrink(1);
+                return true;
+            }
+            if(microscope.getStackInSlot(0) != null && microscope.getStackInSlot(0) != ItemStack.EMPTY){
+                EntityItem item = new EntityItem(worldIn, pos.getX() + 0.5D, pos.getY() + 1.5D, pos.getZ() + 0.5D, microscope.getStackInSlot(0));
+                microscope.setInventorySlotContents(0, ItemStack.EMPTY);
+                if(!worldIn.isRemote) {
+                    worldIn.spawnEntity(item);
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+
+    public static void setState(boolean active, World worldIn, BlockPos pos){
         IBlockState iblockstate = worldIn.getBlockState(pos);
         TileEntity tileentity = worldIn.getTileEntity(pos);
 
         if (active) {
-            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
+            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
         }
         else {
-            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)));
+            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
+            worldIn.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_OFF.getDefaultState().withProperty(FACING, iblockstate.getValue(FACING)), 3);
         }
+
         if (tileentity != null) {
             tileentity.validate();
             worldIn.setTileEntity(pos, tileentity);

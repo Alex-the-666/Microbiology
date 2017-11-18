@@ -1,0 +1,8 @@
+{
+    "parent": "block/inner_stairs",
+    "textures": {
+        "bottom": "microbiology:blocks/congealed_microbial_bricks",
+        "top": "microbiology:blocks/congealed_microbial_bricks",
+        "side": "microbiology:blocks/congealed_microbial_bricks"
+    }
+}

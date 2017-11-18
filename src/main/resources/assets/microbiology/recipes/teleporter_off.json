@@ -1,0 +1,20 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "NNN",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "N": {
+      "item": "microbiology:infinitum_ingot"
+
+    }
+  },
+  "result": {
+    "item": "microbiology:teleporter_off"
+  }
+}

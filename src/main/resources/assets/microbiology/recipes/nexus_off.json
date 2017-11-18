@@ -1,0 +1,21 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "III",
+    "INI",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "N": {
+      "item": "microbiology:infinitum_ingot"
+
+    }
+  },
+  "result": {
+    "item": "microbiology:nexus_off"
+  }
+}

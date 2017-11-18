@@ -1,0 +1,8 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "microbiology:items/empty_petri_dish",
+        "layer1": "microbiology:items/petri_dish_liquid",
+        "layer2": "microbiology:items/petri_dish_solid"
+    }
+}

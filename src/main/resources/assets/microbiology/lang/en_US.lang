@@ -5,5 +5,24 @@ tile.microbiology.microscope_off.name=Infinitum Microscope
 tile.microbiology.microscope_on.name=Infinitum Microscope
 tile.microbiology.teleporter_off.name=Infinitum Teleporter
 tile.microbiology.teleporter_on.name=Infinitum Teleporter
+tile.microbiology.petri_glass.name=Petri Glass
+tile.microbiology.microbial_sediment.name=Microbial Sediment
+tile.microbiology.congealed_microbial_sediment.name=Congealed Microbial Sediment
+tile.microbiology.congealed_microbial_bricks.name=Congealed Microbial Bricks
+tile.microbiology.congealed_microbial_bricks_stairs.name=Congealed Microbial Brick Stairs
+tile.microbiology.congealed_microbial_bricks_slab.name=Congealed Microbial Bricks Slab
+tile.microbiology.congealed_microbial_bricks_double_slab.name=Congealed Microbial Bricks Slab
+tile.microbiology.pollen.name=Pollen Block
 
+itemGroup.microbiology=Microbiology
 item.microbiology.infinitum_ingot.name=Infinitum Ingot
+item.microbiology.vial.name=Empty Vial
+item.microbiology.vial.freshwater.name=Vial of Freshwater
+item.microbiology.vial.seawater.name=Vial of Seawater
+item.microbiology.empty_petri_dish.name=Empty Petri Dish
+item.microbiology.petri_dish.name=Petri Dish
+item.microbiology.resizer.name=Resizer
+
+microbiology.freshwater=Freshwater
+microbiology.saltwater=Saltwater
+fluid.ooze=Microbial Ooze

@@ -2,37 +2,60 @@ package com.github.alexthe666.microbiology.server.block.entity;
 
 import com.github.alexthe666.microbiology.server.block.BlockMicroscope;
 import com.github.alexthe666.microbiology.server.block.IMachinePart;
-import com.github.alexthe666.microbiology.server.block.MicrobiologyBlockRegistry;
 import com.github.alexthe666.microbiology.server.item.ItemPetriDish;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.World;
 
 public class TileEntityMicroscope extends TileEntity implements ITickable, IMachinePart, ISidedInventory {
     private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(1, ItemStack.EMPTY);
-
+    public int tick;
     @Override
     public void update() {
+        tick++;
+        if (getStackInSlot(0) != null && getStackInSlot(0) != ItemStack.EMPTY) {
+            this.markDirty();
+        }
+    }
 
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        NBTTagCompound tag = new NBTTagCompound();
+        this.writeToNBT(tag);
+        return new SPacketUpdateTileEntity(pos, 1, tag);
+    }
+
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
+        this.readFromNBT(packet.getNbtCompound());
     }
 
     @Override
     public void activate() {
-        world.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(BlockMicroscope.FACING, world.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+        BlockMicroscope.setState(true, world, pos);
     }
 
     @Override
     public void deactivate() {
-        world.setBlockState(pos, MicrobiologyBlockRegistry.MICROSCOPE_ON.getDefaultState().withProperty(BlockMicroscope.FACING, world.getBlockState(pos).getValue(BlockMicroscope.FACING)));
+        BlockMicroscope.setState(true, world, pos);
     }
 
     @Override
@@ -43,6 +66,10 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
     @Override
     public ItemStack getStackInSlot(int index) {
         return this.stacks.get(index);
+    }
+
+    public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
+        return !(oldState.getBlock() instanceof BlockMicroscope && newSate.getBlock() instanceof BlockMicroscope);
     }
 
     @Override
@@ -80,12 +107,8 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        boolean flag = !stack.isEmpty() && stack.isItemEqual(this.stacks.get(index)) && ItemStack.areItemStackTagsEqual(stack, this.stacks.get(index));
         this.stacks.set(index, stack);
-
-        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
-            stack.setCount(this.getInventoryStackLimit());
-        }
+        this.markDirty();
     }
 
     @Override

@@ -1,11 +1,18 @@
 package com.github.alexthe666.microbiology.server;
 
+import com.github.alexthe666.microbiology.server.block.ISlabItem;
 import com.github.alexthe666.microbiology.server.block.MicrobiologyBlockRegistry;
+import com.github.alexthe666.microbiology.server.block.MicrobiologyFluidRegistry;
+import com.github.alexthe666.microbiology.server.dimension.MicrobiologyWorldRegistry;
 import com.github.alexthe666.microbiology.server.item.MicrobiologyItemRegistry;
+import com.github.alexthe666.microbiology.server.recipe.RecipePetriDish;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -15,20 +22,20 @@ import java.lang.reflect.Field;
 @Mod.EventBusSubscriber
 public class ServerProxy {
 
-    public static void preInit(){
+    public void preInit(){
 
     }
 
-    public static void init(){
-
+    public void init(){
     }
 
-    public static void postInit(){
+    public void postInit(){
 
     }
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
+        MicrobiologyFluidRegistry.register(event);
         try {
             for (Field f : MicrobiologyBlockRegistry.class.getDeclaredFields()) {
                 Object obj = f.get(null);
@@ -50,11 +57,31 @@ public class ServerProxy {
     @SubscribeEvent
     public static void registerItemBlocks(RegistryEvent.Register<Item> event) {
         for(Block block : MicrobiologyBlockRegistry.BLOCKS){
-            ItemBlock itemBlock = new ItemBlock(block);
+            ItemBlock itemBlock = null;
+            if(block instanceof ISlabItem){
+                itemBlock = ((ISlabItem) block).getItemBlock();
+            }else{
+                itemBlock = new ItemBlock(block);
+            }
             itemBlock.setRegistryName(block.getRegistryName());
             event.getRegistry().register(itemBlock);
         }
     }
+
+    @SubscribeEvent
+    public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
+        IRecipe recipe = new RecipePetriDish();
+        recipe.setRegistryName(new ResourceLocation("microbiology:petri_dish_recipe"));
+        event.getRegistry().register(recipe);
+    }
+
+    @SubscribeEvent
+    public static void registerBiomes(RegistryEvent.Register<Biome> event) {
+        event.getRegistry().register(MicrobiologyWorldRegistry.MICROSCOPIC_FRESHWATER_EXPANSE);
+    }
+
+
+
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
@@ -74,6 +101,7 @@ public class ServerProxy {
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
+
     }
 
     public void createParticle(World world, String name, double x, double y, double z, double motX, double motY, double motZ){

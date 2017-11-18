@@ -1,6 +1,5 @@
 package com.github.alexthe666.microbiology.server.block.entity;
 
-import com.github.alexthe666.microbiology.Microbiology;
 import com.github.alexthe666.microbiology.server.block.BlockTeleporter;
 import com.github.alexthe666.microbiology.server.block.IMachinePart;
 import com.github.alexthe666.microbiology.server.block.MicrobiologyBlockRegistry;
@@ -16,20 +15,14 @@ import java.util.Random;
 
 public class TileEntityTeleporter extends TileEntity implements ITickable, IMachinePart {
 
-    private BlockPos topBlock;
+    public BlockPos topBlock;
     private Random rand = new Random();
     @Override
     public void update() {
         if(this.isTop()){
             checkUnder(this.getBlockType(), this.world, this.pos);
         }
-        if(topBlock != null && world.getBlockState(topBlock).getBlock() instanceof BlockTeleporter && this.getBlockType() == MicrobiologyBlockRegistry.TELEPORTER_ON){
-            if(this.isTop()){
-                Microbiology.PROXY.createParticle(this.world, "teleporter", this.pos.getX() + rand.nextFloat(), this.pos.getY() + 0.6, this.pos.getZ() + rand.nextFloat(), 0, 0.1D * (this.topBlock.getY() - this.pos.getY()), 0);
-            }else{
-                Microbiology.PROXY.createParticle(this.world, "teleporter", this.pos.getX() + rand.nextFloat(), this.pos.getY() + 0.6, this.pos.getZ() + rand.nextFloat(), 0, -0.1D * (this.pos.getY() - this.topBlock.getY()), 0);
-            }
-        }
+
     }
 
     public void onBlockUpdate(){
@@ -103,5 +96,16 @@ public class TileEntityTeleporter extends TileEntity implements ITickable, IMach
 
     public boolean isTop(){
         return world.getBlockState(pos).getBlock() instanceof BlockTeleporter && world.getBlockState(pos).getValue(BlockTeleporter.FACING) == EnumFacing.DOWN;
+    }
+
+    public int getNexusDimension(){
+        for(EnumFacing side : EnumFacing.values()){
+            BlockPos next = pos.offset(side);
+            if(world.getTileEntity(next) != null && world.getTileEntity(next) instanceof TileEntityNexus){
+                TileEntityNexus nex = (TileEntityNexus)world.getTileEntity(next);
+                return nex.getDimension();
+            }
+        }
+        return 0;
     }
 }

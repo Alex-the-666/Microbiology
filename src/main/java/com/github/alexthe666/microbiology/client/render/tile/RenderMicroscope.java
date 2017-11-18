@@ -4,6 +4,9 @@ import com.github.alexthe666.microbiology.client.model.ModelMicroscope;
 import com.github.alexthe666.microbiology.server.block.BlockMicroscope;
 import com.github.alexthe666.microbiology.server.block.MicrobiologyBlockRegistry;
 import com.github.alexthe666.microbiology.server.block.entity.TileEntityMicroscope;
+import com.github.alexthe666.microbiology.server.item.MicrobiologyItemRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -45,6 +48,15 @@ public class RenderMicroscope extends TileEntitySpecialRenderer<TileEntityMicros
         GL11.glPushMatrix();
         MODEL.render(0.0625F);
         GL11.glPopMatrix();
+        if (entity != null && entity.hasWorld() && entity.getStackInSlot(0) != null && entity.getStackInSlot(0).getItem() != null && entity.getStackInSlot(0).getItem() == MicrobiologyItemRegistry.PETRI_DISH) {
+            GL11.glTranslatef(0, 1.25F, -0.2F);
+            GL11.glRotatef(180, 1F, 0, 0);
+            GL11.glScalef(0.35F, 0.35F, 0.35F);
+            GL11.glRotatef(entity.tick % 360, 0, 1F, 0);
+            Minecraft.getMinecraft().getRenderItem().renderItem(entity.getStackInSlot(0), ItemCameraTransforms.TransformType.FIXED);
+
+        }
+
         GL11.glPopMatrix();
         GL11.glPopMatrix();
 

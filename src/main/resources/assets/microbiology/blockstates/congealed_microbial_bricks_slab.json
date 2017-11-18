@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "half=bottom": { "model": "microbiology:congealed_microbial_bricks_slab" },
+        "half=top": { "model": "microbiology:congealed_microbial_bricks_upper_slab" }
+    }
+}

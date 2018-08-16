@@ -1,18 +1,16 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    "   ",
-    "G G",
-    "GGG"
+    "P P",
+    "PPP"
   ],
   "key": {
-    "G": {
+    "P": {
       "type": "forge:ore_dict",
       "ore": "paneGlass"
     }
   },
   "result": {
-    "item": "microbiology:empty_petri_dish",
-    "data": 0
+    "item": "microbiology:empty_petri_dish"
   }
 }

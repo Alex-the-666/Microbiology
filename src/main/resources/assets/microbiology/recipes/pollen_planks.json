@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "group": "planks",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "microbiology:pollen"
+    }
+  },
+  "result": {
+    "item": "microbiology:pollen_planks",
+    "count": 4
+  }
+}

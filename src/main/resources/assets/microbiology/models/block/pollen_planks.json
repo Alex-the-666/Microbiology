@@ -1,6 +1,6 @@
 {
     "parent": "block/cube_all",
     "textures": {
-        "all": "microbiology:blocks/pollen"
+        "all": "microbiology:blocks/pollen_planks"
     }
 }

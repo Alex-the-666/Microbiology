@@ -33,6 +33,17 @@ public class BlockSediment extends Block {
         return AABB;
     }
 
+    public boolean isOpaqueCube(IBlockState state)
+    {
+        return false;
+    }
+
+    @Deprecated
+    public boolean isTopSolid(IBlockState state) {
+        return true;
+    }
+
+
     public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
         entityIn.motionX *= 0.4D;
         entityIn.motionZ *= 0.4D;

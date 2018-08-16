@@ -12,6 +12,9 @@ public class MicrobiologyRecipeRegistry {
 
     public static void init() {
         GameRegistry.addSmelting(MicrobiologyBlockRegistry.INFINITUM_ORE, new ItemStack(MicrobiologyItemRegistry.INFINITUM_INGOT), 2F);
+        OreDictionary.registerOre("plankWood", MicrobiologyBlockRegistry.POLLEN_PLANKS);
+        OreDictionary.registerOre("logWood", MicrobiologyBlockRegistry.POLLEN);
+
         /*
                 PetriDishItemRegistry.add(Blocks.DIRT, PetriDishItemRegistry.Type.SOIL);
         PetriDishItemRegistry.add(Blocks.GRASS, PetriDishItemRegistry.Type.SOIL);

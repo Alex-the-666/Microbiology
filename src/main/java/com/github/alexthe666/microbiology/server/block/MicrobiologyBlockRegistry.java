@@ -53,5 +53,8 @@ public class MicrobiologyBlockRegistry {
     public static BlockMicrobialBricksSlab.Double CONGEALED_MICROBIAL_BRICKS_DOUBLE_SLAB = new BlockMicrobialBricksSlab.Double("congealed_microbial_bricks_double_slab", 2F, 15F, SoundType.GROUND);
 
     @GameRegistry.ObjectHolder(Microbiology.MODID + ":pollen")
-    public static Block POLLEN = new BlockPollen();
+    public static Block POLLEN = new BlockBasicOre(Material.WOOD, SoundType.WOOD, "pollen", "axe", 0, 2F, 0F, false);
+
+    @GameRegistry.ObjectHolder(Microbiology.MODID + ":pollen_planks")
+    public static Block POLLEN_PLANKS = new BlockBasicOre(Material.WOOD, SoundType.WOOD, "pollen_planks", "axe", 0, 2F, 0F, false);
 }

@@ -1,5 +1,6 @@
 package com.github.alexthe666.microbiology.client;
 
+
 import com.github.alexthe666.microbiology.client.particle.ParticleTeleporter;
 import com.github.alexthe666.microbiology.client.render.tile.RenderMicroscope;
 import com.github.alexthe666.microbiology.client.render.tile.RenderTeleporter;
@@ -31,7 +32,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.Random;
-
 @Mod.EventBusSubscriber
 public class ClientProxy extends ServerProxy{
 

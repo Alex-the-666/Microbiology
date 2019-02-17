@@ -2,6 +2,8 @@ package com.github.alexthe666.microbiology.client;
 
 
 import com.github.alexthe666.microbiology.client.particle.ParticleTeleporter;
+import com.github.alexthe666.microbiology.client.render.sky.MicrobiologyCloudRenderer;
+import com.github.alexthe666.microbiology.client.render.sky.MicrobiologySkyRenderer;
 import com.github.alexthe666.microbiology.client.render.tile.RenderMicroscope;
 import com.github.alexthe666.microbiology.client.render.tile.RenderTeleporter;
 import com.github.alexthe666.microbiology.server.ServerProxy;
@@ -23,6 +25,7 @@ import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.client.CloudRenderer;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -85,7 +88,7 @@ public class ClientProxy extends ServerProxy{
         Random randomColorLiquid = new Random();
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
             @Override
-            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+            public int colorMultiplier(ItemStack stack, int tintIndex) {
                 int colorSoil = SOLID_COLORS[4];
                 int colorLiquid = LIQUID_COLORS[1];
                 if(stack.getTagCompound() != null && stack.getTagCompound().hasKey("ItemFluid", 8)){
@@ -120,4 +123,11 @@ public class ClientProxy extends ServerProxy{
             Minecraft.getMinecraft().effectRenderer.addEffect(particle);
         }
     }
+
+    public Object getCloudRenderer(){
+        return new MicrobiologyCloudRenderer();
+    }
+
+    public Object getSkyRenderer(){ return new MicrobiologySkyRenderer(); }
+
 }

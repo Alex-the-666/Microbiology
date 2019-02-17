@@ -1,5 +1,6 @@
 package com.github.alexthe666.microbiology.server.dimension;
 
+import com.github.alexthe666.microbiology.Microbiology;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeProviderSingle;
@@ -18,7 +19,7 @@ public class WorldProviderPetriDish extends WorldProvider {
     }
 
     public DimensionType getDimensionType() {
-        return DimensionType.OVERWORLD;
+        return MicrobiologyWorldRegistry.type;
     }
 
     public boolean hasSkyLight() {
@@ -36,6 +37,12 @@ public class WorldProviderPetriDish extends WorldProvider {
 
     @SideOnly(Side.CLIENT)
     public net.minecraftforge.client.IRenderHandler getCloudRenderer() {
-        return null;
+        return (net.minecraftforge.client.IRenderHandler)Microbiology.PROXY.getCloudRenderer();
     }
+
+    @SideOnly(Side.CLIENT)
+    public net.minecraftforge.client.IRenderHandler getSkyRenderer() {
+        return (net.minecraftforge.client.IRenderHandler)Microbiology.PROXY.getSkyRenderer();
+    }
+
 }

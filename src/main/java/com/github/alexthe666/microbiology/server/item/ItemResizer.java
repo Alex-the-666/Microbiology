@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 public class ItemResizer extends Item {
 
     public ItemResizer() {
-        this.setUnlocalizedName("microbiology.resizer");
+        this.setTranslationKey("microbiology.resizer");
         this.setCreativeTab(Microbiology.CREATIVE_TAB);
         this.setRegistryName("resizer");
     }
@@ -27,9 +27,9 @@ public class ItemResizer extends Item {
             EntityPlayerMP thePlayer = (EntityPlayerMP) player;
             if (thePlayer.timeUntilPortal > 0) {
                 thePlayer.timeUntilPortal = 10;
-            } else if (MicrobiologyWorldData.instance().getDimensionInfo().containsKey(dim)) {
+            } else if (MicrobiologyWorldData.get().getDimensionInfo().containsKey(dim)) {
                 thePlayer.timeUntilPortal = 10;
-                thePlayer.mcServer.getPlayerList().transferPlayerToDimension(thePlayer, 0, new MicrobiologyTeleporter(thePlayer.mcServer.getWorld(0)));
+                thePlayer.getServer().getPlayerList().transferPlayerToDimension(thePlayer, 0, new MicrobiologyTeleporter(thePlayer.getServer().getWorld(0), false));
             }
         }
         return EnumActionResult.SUCCESS;

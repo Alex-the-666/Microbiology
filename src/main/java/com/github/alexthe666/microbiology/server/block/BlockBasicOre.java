@@ -12,7 +12,7 @@ public class BlockBasicOre extends Block {
         this.setHardness(hardness);
         this.setResistance(resistance);
         this.setSoundType(sound);
-        this.setUnlocalizedName("microbiology." + name);
+        this.setTranslationKey("microbiology." + name);
         this.setRegistryName(name);
         this.setHarvestLevel(tool, toolLevel);
         this.setCreativeTab(Microbiology.CREATIVE_TAB);

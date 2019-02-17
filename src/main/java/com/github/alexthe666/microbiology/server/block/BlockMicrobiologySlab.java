@@ -34,7 +34,7 @@ public abstract class BlockMicrobiologySlab extends BlockSlab implements ISlabIt
         setHardness(hardness);
         setResistance(resistance);
         setSoundType(soundType);
-        setUnlocalizedName("microbiology." + name);
+        setTranslationKey("microbiology." + name);
         if (!this.isDouble()) {
             iblockstate = iblockstate.withProperty(HALF, BlockSlab.EnumBlockHalf.BOTTOM);
             setCreativeTab(Microbiology.CREATIVE_TAB);
@@ -76,8 +76,8 @@ public abstract class BlockMicrobiologySlab extends BlockSlab implements ISlabIt
     }
 
     @Override
-    public String getUnlocalizedName(int meta) {
-        return super.getUnlocalizedName();
+    public String getTranslationKey(int meta) {
+        return super.getTranslationKey();
     }
 
     @SideOnly(Side.CLIENT)
@@ -142,8 +142,8 @@ public abstract class BlockMicrobiologySlab extends BlockSlab implements ISlabIt
             return damage;
         }
 
-        public String getUnlocalizedName(ItemStack stack) {
-            return this.singleSlab.getUnlocalizedName(stack.getMetadata());
+        public String getTranslationKey(ItemStack stack) {
+            return this.singleSlab.getTranslationKey(stack.getMetadata());
         }
 
         public EnumActionResult onItemUse(EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

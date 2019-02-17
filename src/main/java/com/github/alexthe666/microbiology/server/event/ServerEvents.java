@@ -11,23 +11,17 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 public class ServerEvents {
 
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        MicrobiologyWorldData.instance().loadDimensions();
-        MicrobiologyDimensionTracker.instance().onLogin(MicrobiologyWorldData.instance().getDimensionInfo().keySet());
-    }
-
     @SubscribeEvent
     public void worldUnload(WorldEvent.Unload event) {
         int dimensionID = event.getWorld().provider.getDimension();
         if (!event.getWorld().isRemote) {
-            MicrobiologyWorldData.instance().unload(event.getWorld(), dimensionID);
+            MicrobiologyWorldData.get().unload(event.getWorld(), dimensionID);
         }
     }
 
     @SubscribeEvent
     public void onMushroomSpawn(DecorateBiomeEvent.Decorate event) {
-        if (event.getType() == DecorateBiomeEvent.Decorate.EventType.SHROOM && MicrobiologyWorldData.instance().getDimensionInfo().containsKey(event.getWorld().provider.getDimension())) {
+        if (event.getType() == DecorateBiomeEvent.Decorate.EventType.SHROOM && MicrobiologyWorldData.get().getDimensionInfo().containsKey(event.getWorld().provider.getDimension())) {
             event.setCanceled(true);
         }
     }

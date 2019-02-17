@@ -27,9 +27,6 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
     @Override
     public void update() {
         tick++;
-        if (getStackInSlot(0) != null && getStackInSlot(0) != ItemStack.EMPTY) {
-            this.markDirty();
-        }
     }
 
     @Override
@@ -45,17 +42,18 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
-        this.readFromNBT(packet.getNbtCompound());
+        //this.readFromNBT(packet.getNbtCompound());
     }
 
     @Override
     public void activate() {
+        this.writeToNBT(this.getTileData());
         BlockMicroscope.setState(true, world, pos);
     }
 
     @Override
     public void deactivate() {
-        BlockMicroscope.setState(true, world, pos);
+        BlockMicroscope.setState(false, world, pos);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
     }
 
     public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-        return !(oldState.getBlock() instanceof BlockMicroscope && newSate.getBlock() instanceof BlockMicroscope);
+        return false;
     }
 
     @Override
@@ -107,8 +105,12 @@ public class TileEntityMicroscope extends TileEntity implements ITickable, IMach
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
+        boolean flag = !stack.isEmpty() && stack.isItemEqual(this.stacks.get(index)) && ItemStack.areItemStackTagsEqual(stack, this.stacks.get(index));
         this.stacks.set(index, stack);
-        this.markDirty();
+
+        if (!stack.isEmpty() && stack.getCount() > this.getInventoryStackLimit()) {
+            stack.setCount(this.getInventoryStackLimit());
+        }
     }
 
     @Override

@@ -41,7 +41,7 @@ public class BlockMicroscope extends BlockContainer {
         this.setHardness(3.0F);
         this.setResistance(7.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(isActive ? "microbiology.microscope_on" : "microbiology.microscope_off");
+        this.setTranslationKey(isActive ? "microbiology.microscope_on" : "microbiology.microscope_off");
         this.setRegistryName(isActive ? "microbiology:microscope_on" : "microbiology:microscope_off");
         this.setHarvestLevel("pickaxe", 2);
         if(isActive){
@@ -81,7 +81,7 @@ public class BlockMicroscope extends BlockContainer {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -224,7 +224,7 @@ public class BlockMicroscope extends BlockContainer {
     }
 
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+        EnumFacing enumfacing = EnumFacing.byHorizontalIndex(meta);
 
         if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
             enumfacing = EnumFacing.NORTH;

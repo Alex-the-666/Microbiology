@@ -10,7 +10,7 @@ public class BlockMicrobiologyStairs extends BlockStairs {
         super(modelState);
         this.setLightOpacity(0);
         this.setCreativeTab(Microbiology.CREATIVE_TAB);
-        this.setUnlocalizedName("microbiology." + name);
+        this.setTranslationKey("microbiology." + name);
         this.setRegistryName(name);
     }
 

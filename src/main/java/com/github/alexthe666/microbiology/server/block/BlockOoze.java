@@ -21,7 +21,7 @@ public class BlockOoze extends BlockFluidClassic {
     public BlockOoze(Fluid fluid, Material material) {
         super(fluid, material);
         this.setLightOpacity(1);
-        this.setUnlocalizedName("microbiology.ooze");
+        this.setTranslationKey("microbiology.ooze");
         this.setRegistryName("microbiology:ooze");
     }
 

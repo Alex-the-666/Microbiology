@@ -36,6 +36,7 @@ public class MicrobiologyDimensionTracker {
         this.dimensions.addAll(dimensions);
         for (int i : dimensions) {
             if (!DimensionManager.isDimensionRegistered(i)) {
+                System.out.println("registered " + i);
                 DimensionManager.registerDimension(i, MicrobiologyWorldRegistry.type);
             }
         }

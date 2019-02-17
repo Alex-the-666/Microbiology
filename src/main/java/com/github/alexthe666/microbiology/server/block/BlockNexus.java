@@ -24,7 +24,7 @@ public class BlockNexus extends BlockContainer {
         this.setHardness(5.0F);
         this.setResistance(10.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(isActive ? "microbiology.nexus_on" : "microbiology.nexus_off");
+        this.setTranslationKey(isActive ? "microbiology.nexus_on" : "microbiology.nexus_off");
         this.setRegistryName(isActive ? "microbiology:nexus_on" : "microbiology:nexus_off");
         this.setHarvestLevel("pickaxe", 2);
         if(isActive){

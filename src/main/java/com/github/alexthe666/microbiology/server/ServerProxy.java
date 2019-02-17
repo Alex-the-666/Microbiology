@@ -4,8 +4,10 @@ import com.github.alexthe666.microbiology.server.block.ISlabItem;
 import com.github.alexthe666.microbiology.server.block.MicrobiologyBlockRegistry;
 import com.github.alexthe666.microbiology.server.block.MicrobiologyFluidRegistry;
 import com.github.alexthe666.microbiology.server.dimension.MicrobiologyWorldRegistry;
+import com.github.alexthe666.microbiology.server.entity.MicrobiologyEntityProperties;
 import com.github.alexthe666.microbiology.server.item.MicrobiologyItemRegistry;
 import com.github.alexthe666.microbiology.server.recipe.RecipePetriDish;
+import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -107,4 +109,7 @@ public class ServerProxy {
     public void createParticle(World world, String name, double x, double y, double z, double motX, double motY, double motZ){
 
     }
+
+    public Object getCloudRenderer(){ return null; }
+    public Object getSkyRenderer(){ return null; }
 }

@@ -83,9 +83,4 @@ public class RecipePetriDish extends IForgeRegistryEntry.Impl<IRecipe> implement
         stack.setTagCompound(tag);
         return stack;
     }
-
-    @Override
-    public boolean isHidden() {
-        return true;
-    }
 }

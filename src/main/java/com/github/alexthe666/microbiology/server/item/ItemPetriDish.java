@@ -22,7 +22,7 @@ import java.util.Random;
 public class ItemPetriDish extends Item {
 
     public ItemPetriDish() {
-        this.setUnlocalizedName("microbiology.petri_dish");
+        this.setTranslationKey("microbiology.petri_dish");
         this.setCreativeTab(Microbiology.CREATIVE_TAB);
         this.setRegistryName("petri_dish");
         this.setMaxStackSize(1);
@@ -71,7 +71,7 @@ public class ItemPetriDish extends Item {
                 compound.setLong("RandomSeed", new Random().nextLong());
                 WorldInfoPetriDish worldInfo = new WorldInfoPetriDish(compound);
                 worldInfo.setWorldName("Petri Dish");
-                int id = MicrobiologyWorldData.instance().createDimension(worldInfo);
+                int id = MicrobiologyWorldData.get().createDimension(worldInfo);
                 stack.getTagCompound().setInteger("DimensionID", id);
                 return id;
             } else {

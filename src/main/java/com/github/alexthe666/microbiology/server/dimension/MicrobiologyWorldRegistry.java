@@ -10,7 +10,7 @@ import net.minecraftforge.common.BiomeDictionary;
 public class MicrobiologyWorldRegistry {
 
     public static DimensionType type = DimensionType.register("Petri Dish", "petri", 45456, WorldProviderPetriDish.class, false);
-    public static Biome MICROSCOPIC_FRESHWATER_EXPANSE = new BiomeMicrobiology("Microscopic Expanse", Microbiology.CONFIG.biomeIDMicroscopicExpanse, -0.3F, 0.1F, 0.8F, MicrobiologyBlockRegistry.MICROBIAL_SEDIMENT.getDefaultState(), MicrobiologyBlockRegistry.MICROBIAL_SEDIMENT.getDefaultState());
+    public static Biome MICROSCOPIC_FRESHWATER_EXPANSE = new BiomeMicrobiology("Microscopic Expanse", Microbiology.CONFIG.biomeIDMicroscopicExpanse, -1.0F, 0.1F, 0.8F, MicrobiologyBlockRegistry.MICROBIAL_SEDIMENT.getDefaultState(), MicrobiologyBlockRegistry.MICROBIAL_SEDIMENT.getDefaultState());
 
     public static void register(){
         BiomeDictionary.addTypes(MICROSCOPIC_FRESHWATER_EXPANSE, BiomeDictionary.Type.WASTELAND);

@@ -13,6 +13,7 @@ import net.minecraft.world.ServerWorldEventHandler;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ISaveHandler;
+import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.DimensionManager;
@@ -29,22 +30,17 @@ import java.util.UUID;
 
 public class MicrobiologyWorldData extends WorldSavedData {
 
-    private static String NAME = "MicrobiologyDimensionWorldData";
-    private HashMap<Integer, WorldInfoPetriDish> dimensionInfo;
-    private HashMap<Integer, UUID> removed;
+    private static final String IDENTIFIER = "microbiology_info";
+    private HashMap<Integer, WorldInfoPetriDish> dimensionInfo = new HashMap<Integer, WorldInfoPetriDish>();
+    private HashMap<Integer, UUID> removed = new HashMap<Integer, UUID>();
 
     public MicrobiologyWorldData(String name) {
         super(name);
-
-        dimensionInfo = new HashMap<Integer, WorldInfoPetriDish>();
-        removed = new HashMap<Integer, UUID>();
     }
 
     public MicrobiologyWorldData() {
-        super(NAME);
-
-        dimensionInfo = new HashMap<Integer, WorldInfoPetriDish>();
-        removed = new HashMap<Integer, UUID>();
+        super(IDENTIFIER);
+        this.markDirty();
     }
 
     @Override
@@ -71,16 +67,22 @@ public class MicrobiologyWorldData extends WorldSavedData {
         return 0;
     }
 
-    public static MicrobiologyWorldData instance() {
-        MicrobiologyWorldData INSTANCE;
-        INSTANCE = (MicrobiologyWorldData) FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getMapStorage().getOrLoadData(MicrobiologyWorldData.class, NAME);
+    public static MicrobiologyWorldData get() {
+        MapStorage storage =  FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getPerWorldStorage();
+        MicrobiologyWorldData instance = (MicrobiologyWorldData) storage.getOrLoadData(MicrobiologyWorldData.class, IDENTIFIER);
 
-        if (INSTANCE == null) {
-            INSTANCE = new MicrobiologyWorldData();
-            FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getMapStorage().setData(NAME, INSTANCE);
+        if (instance == null) {
+            instance = new MicrobiologyWorldData();
+            storage.setData(IDENTIFIER, instance);
         }
+        instance.markDirty();
+        return instance;
+    }
 
-        return INSTANCE;
+    public void debug(){
+        for (int id : dimensionInfo.keySet()) {
+            System.out.println("found dimension ID: " + id);
+        }
     }
 
     public String getDimensionName(int dimensionId) {

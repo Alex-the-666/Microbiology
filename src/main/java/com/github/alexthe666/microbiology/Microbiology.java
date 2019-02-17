@@ -1,11 +1,15 @@
 package com.github.alexthe666.microbiology;
 
 import com.github.alexthe666.microbiology.server.ServerProxy;
+import com.github.alexthe666.microbiology.server.dimension.MicrobiologyDimensionTracker;
+import com.github.alexthe666.microbiology.server.dimension.MicrobiologyWorldData;
 import com.github.alexthe666.microbiology.server.dimension.generation.MicrobiologyWorldGenerator;
+import com.github.alexthe666.microbiology.server.entity.MicrobiologyEntityProperties;
 import com.github.alexthe666.microbiology.server.event.ServerEvents;
 import com.github.alexthe666.microbiology.server.item.MicrobiologyItemRegistry;
 import com.github.alexthe666.microbiology.server.recipe.MicrobiologyRecipeRegistry;
 import net.ilexiconn.llibrary.server.config.Config;
+import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,6 +20,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 @Mod(modid = Microbiology.MODID, name = Microbiology.NAME, dependencies = "required-after:llibrary@[" + Microbiology.LLIBRARY_VERSION + ",)", version = Microbiology.VERSION)
@@ -40,13 +45,14 @@ public class Microbiology
     public void preInit(FMLPreInitializationEvent event) {
         CREATIVE_TAB = new CreativeTabs("microbiology") {
             @Override
-            public ItemStack getTabIconItem() {
+            public ItemStack createIcon() {
                 return new ItemStack(MicrobiologyItemRegistry.PETRI_DISH);
             }
         };
         PROXY.preInit();
         MinecraftForge.EVENT_BUS.register(new ServerEvents());
         GameRegistry.registerWorldGenerator(new MicrobiologyWorldGenerator(), 0);
+        EntityPropertiesHandler.INSTANCE.registerProperties(MicrobiologyEntityProperties.class);
     }
 
     @EventHandler
@@ -58,5 +64,11 @@ public class Microbiology
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         PROXY.postInit();
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        MicrobiologyWorldData.get().loadDimensions();
+        MicrobiologyDimensionTracker.instance().onLogin(MicrobiologyWorldData.get().getDimensionInfo().keySet());
     }
 }

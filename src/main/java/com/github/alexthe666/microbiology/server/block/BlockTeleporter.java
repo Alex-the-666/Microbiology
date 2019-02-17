@@ -3,6 +3,8 @@ package com.github.alexthe666.microbiology.server.block;
 import com.github.alexthe666.microbiology.Microbiology;
 import com.github.alexthe666.microbiology.server.block.entity.TileEntityTeleporter;
 import com.github.alexthe666.microbiology.server.dimension.MicrobiologyTeleporter;
+import com.github.alexthe666.microbiology.server.entity.MicrobiologyEntityProperties;
+import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.SoundType;
@@ -43,7 +45,7 @@ public class BlockTeleporter extends BlockContainer {
         this.setHardness(4.0F);
         this.setResistance(10.0F);
         this.setSoundType(SoundType.METAL);
-        this.setUnlocalizedName(isActive ? "microbiology.teleporter_on" : "microbiology.teleporter_off");
+        this.setTranslationKey(isActive ? "microbiology.teleporter_on" : "microbiology.teleporter_off");
         this.setRegistryName(isActive ? "microbiology:teleporter_on" : "microbiology:teleporter_off");
         this.setHarvestLevel("pickaxe", 2);
         if(isActive){
@@ -62,7 +64,7 @@ public class BlockTeleporter extends BlockContainer {
 
     @Override
     @SideOnly(Side.CLIENT)
-    public BlockRenderLayer getBlockLayer() {
+    public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
@@ -108,22 +110,31 @@ public class BlockTeleporter extends BlockContainer {
         }
     }
 
-    public void onEntityCollidedWithBlock(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+    public void onEntityCollision(World worldIn, BlockPos pos, IBlockState state, Entity entityIn) {
+        if(entityIn instanceof EntityLivingBase){
+            MicrobiologyEntityProperties properties = EntityPropertiesHandler.INSTANCE.getProperties((EntityLivingBase)entityIn, MicrobiologyEntityProperties.class);
+            if(properties != null){
+                properties.lastTeleporterPos = new BlockPos(pos);
+
+            }
+        }
         if(worldIn.getTileEntity(pos) instanceof TileEntityTeleporter && this == MicrobiologyBlockRegistry.TELEPORTER_ON && entityIn instanceof EntityPlayer && !worldIn.isRemote){
             TileEntityTeleporter tele = (TileEntityTeleporter)worldIn.getTileEntity(pos);
             int dim = tele.getNexusDimension();
+
             if(dim != 0){
                 if ((!entityIn.isBeingRidden()) && (entityIn.getPassengers().isEmpty()) && (entityIn instanceof EntityPlayerMP)) {
                     EntityPlayerMP thePlayer = (EntityPlayerMP) entityIn;
                     if (thePlayer.timeUntilPortal > 0) {
                         thePlayer.timeUntilPortal = 10;
-                    } else if (thePlayer.dimension != dim && thePlayer.mcServer.getWorld(dim) != null) {
+                    } else if (thePlayer.dimension != dim && thePlayer.getServer().getWorld(dim) != null) {
                         thePlayer.timeUntilPortal = 10;
-                        thePlayer.mcServer.getPlayerList().transferPlayerToDimension(thePlayer, dim, new MicrobiologyTeleporter(thePlayer.mcServer.getWorld(dim)));
+                        thePlayer.getServer().getPlayerList().transferPlayerToDimension(thePlayer, dim, new MicrobiologyTeleporter(thePlayer.getServer().getWorld(dim), true));
                     } else {
                         thePlayer.timeUntilPortal = 10;
-                        thePlayer.mcServer.getPlayerList().transferPlayerToDimension(thePlayer, 0, new MicrobiologyTeleporter(thePlayer.mcServer.getWorld(0)));
+                        thePlayer.getServer().getPlayerList().transferPlayerToDimension(thePlayer, 0, new MicrobiologyTeleporter(thePlayer.getServer().getWorld(0), false));
                     }
+
                 }
             }
         }

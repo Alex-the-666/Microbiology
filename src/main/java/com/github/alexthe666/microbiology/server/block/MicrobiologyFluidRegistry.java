@@ -12,11 +12,11 @@ public class MicrobiologyFluidRegistry {
     public static Fluid OOZE_FLUID;
     public static Block OOZE;
 
-    public static void register(RegistryEvent.Register<Block> event) {
+    public static void   register(RegistryEvent.Register<Block> event) {
         OOZE_FLUID = new Fluid("ooze", new ResourceLocation("microbiology", "blocks/ooze"), new ResourceLocation("microbiology", "blocks/ooze"));
         FluidRegistry.registerFluid(OOZE_FLUID);
         FluidRegistry.addBucketForFluid(OOZE_FLUID);
-        OOZE = new BlockOoze(OOZE_FLUID, Material.WATER).setUnlocalizedName("microbiology.ooze");
+        OOZE = new BlockOoze(OOZE_FLUID, Material.WATER);
         event.getRegistry().register(OOZE);
     }
 }

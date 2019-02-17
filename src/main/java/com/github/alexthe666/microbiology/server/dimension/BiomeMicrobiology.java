@@ -7,9 +7,12 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -18,6 +21,7 @@ public class BiomeMicrobiology extends Biome {
     protected static final IBlockState CONGEALED_SEDIMENT = MicrobiologyBlockRegistry.CONGEALED_MICROBIAL_SEDIMENT.getDefaultState();
     protected static final IBlockState OOZE = MicrobiologyFluidRegistry.OOZE.getDefaultState();
     protected static final IBlockState PETRIGLASS = MicrobiologyBlockRegistry.PETRI_GLASS.getDefaultState();
+    private int skyColor = 0;
 
     public BiomeMicrobiology(String name, int id, float baseHeight, float heightVariation, float temperature, IBlockState topBlock, IBlockState lowerBlock) {
         super(new BiomeProperties(name).setRainDisabled().setBaseHeight(baseHeight).setHeightVariation(heightVariation).setTemperature(temperature));
@@ -28,6 +32,17 @@ public class BiomeMicrobiology extends Biome {
         this.decorator.mushroomsPerChunk = 0;
         this.fillerBlock = lowerBlock;
         this.setRegistryName(name);
+        setSkyColor(0X39A6A0);
+    }
+
+    public BiomeMicrobiology setSkyColor(int color) {
+        this.skyColor = color;
+        return this;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getSkyColorByTemp(float currentTemperature) {
+        return skyColor;
     }
 
     public void genTerrainBlocks(World worldIn, Random rand, ChunkPrimer chunkPrimerIn, int x, int z, double noiseVal) {
@@ -47,7 +62,7 @@ public class BiomeMicrobiology extends Biome {
         for (int j1 = 255; j1 >= 0; --j1) {
             if (j1 <= 5 || (worldIn.getWorldBorder().minX() + 20 > i1 || worldIn.getWorldBorder().maxX() - 20 < i1 || (worldIn.getWorldBorder().minZ() + 20 > l || worldIn.getWorldBorder().maxZ() - 20 < l))) {
                 chunkPrimerIn.setBlockState(i1, j1, l, PETRIGLASS);
-            }else {
+            } else {
                 IBlockState iblockstate2 = chunkPrimerIn.getBlockState(i1, j1, l);
 
                 if (iblockstate2.getMaterial() == Material.AIR) {
@@ -63,7 +78,7 @@ public class BiomeMicrobiology extends Biome {
                         }
 
                         if (j1 < i && (iblockstate == null || iblockstate.getMaterial() == Material.AIR)) {
-                            if (this.getFloatTemperature(blockpos$mutableblockpos.setPos(x, j1, z)) < 0.15F) {
+                            if (this.getTemperature(blockpos$mutableblockpos.setPos(x, j1, z)) < 0.15F) {
                                 iblockstate = ICE;
                             } else {
                                 iblockstate = OOZE;
@@ -74,7 +89,7 @@ public class BiomeMicrobiology extends Biome {
 
                         if (j1 >= i - 1) {
                             chunkPrimerIn.setBlockState(i1, j1, l, iblockstate);
-                        } else if (j1 < i - 7 - k) {
+                        } else if (j1 < i - 12 - k) {
                             iblockstate = AIR;
                             iblockstate1 = CONGEALED_SEDIMENT;
                             chunkPrimerIn.setBlockState(i1, j1, l, CONGEALED_SEDIMENT);

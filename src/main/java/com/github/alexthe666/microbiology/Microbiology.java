@@ -13,15 +13,15 @@ import net.ilexiconn.llibrary.server.entity.EntityPropertiesHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 @Mod(modid = Microbiology.MODID, name = Microbiology.NAME, dependencies = "required-after:llibrary@[" + Microbiology.LLIBRARY_VERSION + ",)", version = Microbiology.VERSION)
 public class Microbiology
@@ -66,9 +66,11 @@ public class Microbiology
         PROXY.postInit();
     }
 
-    @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event) {
-        MicrobiologyWorldData.get().loadDimensions();
-        MicrobiologyDimensionTracker.instance().onLogin(MicrobiologyWorldData.get().getDimensionInfo().keySet());
+    private static boolean loaded = false;
+    @EventHandler
+    public void serverStarting(FMLServerAboutToStartEvent event) {
+        MicrobiologyWorldData data = MicrobiologyWorldData.get();
+        data.loadDimensions();
+        MicrobiologyDimensionTracker.instance().onLogin(data.getDimensionInfo().keySet());
     }
 }

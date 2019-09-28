@@ -8,10 +8,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.*;
+import net.minecraft.village.VillageCollection;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.ServerWorldEventHandler;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.storage.AnvilSaveConverter;
 import net.minecraft.world.storage.ISaveHandler;
 import net.minecraft.world.storage.MapStorage;
 import net.minecraft.world.storage.WorldInfo;
@@ -68,9 +70,11 @@ public class MicrobiologyWorldData extends WorldSavedData {
     }
 
     public static MicrobiologyWorldData get() {
-        MapStorage storage =  FMLCommonHandler.instance().getMinecraftServerInstance().getEntityWorld().getPerWorldStorage();
+        MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+        ISaveHandler saveHandler = server.getActiveAnvilConverter().getSaveLoader(server.getFolderName(), true);
+        //File dimensionFile = new File(new File(saveHandler.getWorldDirectory(), "data"), "microbiology");
+        MapStorage storage = new MapStorage(saveHandler);
         MicrobiologyWorldData instance = (MicrobiologyWorldData) storage.getOrLoadData(MicrobiologyWorldData.class, IDENTIFIER);
-
         if (instance == null) {
             instance = new MicrobiologyWorldData();
             storage.setData(IDENTIFIER, instance);
@@ -126,10 +130,11 @@ public class MicrobiologyWorldData extends WorldSavedData {
         for (Entry<Integer, WorldInfoPetriDish> entry : dimensionInfo.entrySet()) {
             int dimensionID = entry.getKey();
             WorldInfo worldInfo = entry.getValue();
+            if (!DimensionManager.isDimensionRegistered(dimensionID)) {
+                DimensionManager.registerDimension(dimensionID, MicrobiologyWorldRegistry.type);
+                loadDimension(dimensionID, worldInfo);
+            }
 
-            DimensionManager.registerDimension(dimensionID, MicrobiologyWorldRegistry.type);
-
-            loadDimension(dimensionID, worldInfo);
         }
     }
 
